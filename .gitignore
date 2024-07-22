@@ -161,6 +161,7 @@ cython_debug/
 #.idea/
 
 .git/
+.gitignore
 .idea/
 FSMStates/__pycache__/
 Handlers/__pycache__/
