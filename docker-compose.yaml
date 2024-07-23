@@ -10,14 +10,6 @@ services:
       - "6380:6379"
     volumes:
       - ./redisdata:/data
-#    deploy:
-#      resources:
-#        limits:
-#          cpus: '0.50'
-#          memory: 512M
-#        reservations:
-#          cpus: '0.25'
-#          memory: 256M
     command: >
       sh -c '
         mkdir -p /usr/local/etc/redis &&
@@ -37,3 +29,46 @@ services:
     restart: unless-stopped
     tty: true
     stdin_open: true
+    networks:
+      - network_app
+
+  postgres:
+    image:  postgres:14.8-alpine3.18
+    container_name: postgres-dev
+    environment:
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_USER: ${PG_USER}
+    volumes:
+      - ../2. Init Database:/docker-entrypoint-initdb.d
+      - ./postgres-data:/var/lib/postgresql/data
+
+    ports:
+      - "$PG_PORT:5432"
+    healthcheck:
+      test: "pg_isready -U ${PG_USER} -d ${PG_DB}"
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - network_app
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:7.2
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+#      - PGADMIN_CONFIG_SERVER_MODE:=${PGADMIN_CONFIG_SERVER_MODE}
+    volumes:
+      - ./pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    networks:
+      - network_app
+
+networks:
+  network_app:
+    driver: bridge
