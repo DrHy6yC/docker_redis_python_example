@@ -1,7 +1,7 @@
 services:
   redis:
-    image: redis:latest
-    container_name: redis_container
+    image: redis:7.2.5-alpine3.20
+    container_name: redis_dev
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_USER=${REDIS_USER}
@@ -33,39 +33,33 @@ services:
       - network_app
 
   postgres:
-    image:  postgres:14.8-alpine3.18
+    image:  postgres:15.7-alpine3.20
     container_name: postgres-dev
     environment:
-      POSTGRES_DB: ${PG_DB}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_USER: ${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_USER=${PG_USER}
     volumes:
-      - ../2. Init Database:/docker-entrypoint-initdb.d
       - ./postgres-data:/var/lib/postgresql/data
-
     ports:
-      - "$PG_PORT:5432"
-    healthcheck:
-      test: "pg_isready -U ${PG_USER} -d ${PG_DB}"
-      interval: "10s"
-      timeout: "5s"
-      retries: 5
+      - "5432:5432"
     restart: unless-stopped
     networks:
       - network_app
 
   pgadmin:
-    container_name: pgadmin_container
-    image: dpage/pgadmin4:7.2
+    container_name: pgadmin-dev
+    image: dpage/pgadmin4:8.9
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-#      - PGADMIN_CONFIG_SERVER_MODE:=${PGADMIN_CONFIG_SERVER_MODE}
+#      - PGADMIN_CONFIG_SERVER_MODE=${PGADMIN_CONFIG_SERVER_MODE}
     volumes:
       - ./pgadmin-data:/var/lib/pgadmin
     ports:
       - "5050:80"
     restart: unless-stopped
+    depends_on:
+      - postgres
     networks:
       - network_app
 
