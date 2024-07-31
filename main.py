@@ -3,7 +3,6 @@ from dotenv import load_dotenv
 import redis
 
 
-
 load_dotenv()
 r = redis.Redis(
     host=getenv('REDIS_HOST'),
