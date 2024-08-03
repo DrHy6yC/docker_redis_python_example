@@ -1,4 +1,4 @@
-import config_db
+from .config_db import *
 from icecream import ic
 
 
@@ -40,15 +40,15 @@ class DBMYSQL:
         Понадобится что бы перевести строку .env в bool python
     """
 
-    DB_IS_CREATED: str = config_db.DB_IS_CREATED
-    DB_HOST: str = config_db.DB_HOST
-    DB_PORT: str = config_db.DB_PORT
-    DB_USER: str = config_db.DB_USER
-    DB_PASS: str = config_db.DB_PASS
-    DB_NAME: str = config_db.DB_NAME
-    DB_SQLite: str = config_db.DB_SQLite
-    DB_DBMS: str = config_db.DB_DBMS
-    DB_ECHO: str = config_db.DB_ECHO
+    DB_IS_CREATED: str = DB_IS_CREATED
+    DB_HOST: str = DB_HOST
+    DB_PORT: str = DB_PORT
+    DB_USER: str = DB_USER
+    DB_PASS: str = DB_PASS
+    DB_NAME: str = DB_NAME
+    DB_SQLite: str = DB_SQLite
+    DB_DBMS: str = DB_DBMS
+    DB_ECHO: str = DB_ECHO
 
     def get_async_dsn(self) -> str:
         """Метод для получения строки асинхронного подключения из .env

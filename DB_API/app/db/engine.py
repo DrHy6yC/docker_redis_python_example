@@ -1,8 +1,8 @@
-import config_db
+from .config_db import *
 
 from icecream import ic
 
-from database import DBMYSQL
+from .database import DBMYSQL
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine
 
 
@@ -23,8 +23,8 @@ def get_async_engine(async_dsn_db: str, is_echo: bool) -> AsyncEngine:
 
 db_mysql = DBMYSQL()
 
-is_created_db = config_db.DB_IS_CREATED
-is_echo_db = config_db.DB_ECHO
+is_created_db = DB_IS_CREATED
+is_echo_db = DB_ECHO
 ic(is_created_db, is_echo_db)
 
 async_dsn = db_mysql.get_async_dsn()

@@ -1,7 +1,7 @@
 from icecream import ic
-from db_worker import filling_min_db, async_insert_data_list_to_bd
-from ORM import async_get_const
-from models import *
+from db.db_worker import filling_min_db, async_insert_data_list_to_bd
+from db.ORM import async_get_const
+from db.models import *
 
 from fastapi import FastAPI
 

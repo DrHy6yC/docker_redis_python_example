@@ -6,8 +6,8 @@ from sqlalchemy import select, func, and_, desc
 from sqlalchemy.orm import join
 from sqlalchemy.sql.functions import count
 
-from engine import async_session_sql_connect
-from models import UsersORM, QuizzesORM,  UserQuizzesORM, \
+from .engine import async_session_sql_connect
+from .models import UsersORM, QuizzesORM,  UserQuizzesORM, \
     QuizeAnswersORM, QuizeQuestionsORM, UserAnswersORM, QuizeTrueAnswersORM,\
     ConstantsORM, UserLevelsORM
 
