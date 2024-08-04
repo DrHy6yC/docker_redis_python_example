@@ -1,36 +1,53 @@
 services:
-  redis:
-    image: redis:7.2.5-alpine3.20
-    container_name: redis_dev
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-      REDIS_USER: ${REDIS_USER}
-      REDIS_USER_PASSWORD: ${REDIS_USER_PASSWORD}
+  db_api:
+    image: drhy6yc/db_api:latest
     ports:
-      - "6380:6379"
-    volumes:
-      - ./redisdata:/data
-    command: >
-      sh -c '
-        mkdir -p /usr/local/etc/redis &&
-        echo "bind 0.0.0.0" > /usr/local/etc/redis/redis.conf &&
-        echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf &&
-        echo "appendonly yes" >> /usr/local/etc/redis/redis.conf &&
-        echo "appendfsync everysec" >> /usr/local/etc/redis/redis.conf &&
-        echo "user default on nopass ~* +@all" > /usr/local/etc/redis/users.acl &&
-        echo "user $REDIS_USER on >$REDIS_USER_PASSWORD ~* +@all" >> /usr/local/etc/redis/users.acl &&
-        redis-server /usr/local/etc/redis/redis.conf --aclfile /usr/local/etc/redis/users.acl
-      '
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    restart: unless-stopped
-    tty: true
-    stdin_open: true
+      - "8000:8000"
+    environment:
+      DB_IS_CREATED: "True"
+      DB_HOST: "postgres"
+      DB_PORT: "5432"
+      DB_USER: "user0791"
+      DB_PASS: "30993054x"
+      DB_NAME: "Bot"
+      DB_SQLite: "Bot"
+      DB_DBMS: "PGSQL"
+      DB_ECHO: "True"
     networks:
       - network_app
+
+#  redis:
+#    image: redis:7.2.5-alpine3.20
+#    container_name: redis_dev
+#    environment:
+#      REDIS_PASSWORD: ${REDIS_PASSWORD}
+#      REDIS_USER: ${REDIS_USER}
+#      REDIS_USER_PASSWORD: ${REDIS_USER_PASSWORD}
+#    ports:
+#      - "6380:6379"
+#    volumes:
+#      - ./redisdata:/data
+#    command: >
+#      sh -c '
+#        mkdir -p /usr/local/etc/redis &&
+#        echo "bind 0.0.0.0" > /usr/local/etc/redis/redis.conf &&
+#        echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf &&
+#        echo "appendonly yes" >> /usr/local/etc/redis/redis.conf &&
+#        echo "appendfsync everysec" >> /usr/local/etc/redis/redis.conf &&
+#        echo "user default on nopass ~* +@all" > /usr/local/etc/redis/users.acl &&
+#        echo "user $REDIS_USER on >$REDIS_USER_PASSWORD ~* +@all" >> /usr/local/etc/redis/users.acl &&
+#        redis-server /usr/local/etc/redis/redis.conf --aclfile /usr/local/etc/redis/users.acl
+#      '
+#    healthcheck:
+#      test: ["CMD", "redis-cli", "-a", "$REDIS_PASSWORD", "ping"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
+#    restart: unless-stopped
+#    tty: true
+#    stdin_open: true
+#    networks:
+#      - network_app
 
   postgres:
     image:  postgres:15.7-alpine3.20
@@ -46,47 +63,47 @@ services:
     networks:
       - network_app
 
-  pgadmin:
-    container_name: pgadmin-dev
-    image: dpage/pgadmin4:8.9
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-    volumes:
-      - ./pgadmin-data:/var/lib/pgadmin
-    ports:
-      - "5050:80"
-    restart: unless-stopped
-    depends_on:
-      - postgres
-    networks:
-      - network_app
-
-  mysql:
-    image: mysql:latest
-    container_name: mysql_dev
-    restart: always
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    networks:
-      - network_app
-
-  phpmyadmin:
-    container_name: phpmyadmin_dev
-    image: phpmyadmin/phpmyadmin:latest
-    restart: always
-    ports:
-      - "8080:80"
-    environment:
-      PMA_HOST: mysql
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-    networks:
-      - network_app
+#  pgadmin:
+#    container_name: pgadmin-dev
+#    image: dpage/pgadmin4:8.9
+#    environment:
+#      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+#      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+#    volumes:
+#      - ./pgadmin-data:/var/lib/pgadmin
+#    ports:
+#      - "5050:80"
+#    restart: unless-stopped
+#    depends_on:
+#      - postgres
+#    networks:
+#      - network_app
+#
+#  mysql:
+#    image: mysql:latest
+#    container_name: mysql_dev
+#    restart: always
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#      MYSQL_DATABASE: ${MYSQL_DATABASE}
+#      MYSQL_USER: ${MYSQL_USER}
+#      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+#    networks:
+#      - network_app
+#
+#  phpmyadmin:
+#    container_name: phpmyadmin_dev
+#    image: phpmyadmin/phpmyadmin:latest
+#    restart: always
+#    ports:
+#      - "8080:80"
+#    environment:
+#      PMA_HOST: mysql
+#      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+#    networks:
+#      - network_app
 
 networks:
   network_app:
