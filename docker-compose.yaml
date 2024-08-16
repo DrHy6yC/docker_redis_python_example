@@ -1,6 +1,6 @@
 services:
   db_api:
-    image: drhy6yc/db_api:latest
+    image: drhy6yc/db_api:0.0.1-001
     ports:
       - "8000:8000"
     environment:
